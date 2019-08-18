@@ -3,18 +3,23 @@ package ia.example.shoppinglist.rest.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import ia.example.shoppinglist.rest.dto.EntryOrderDto;
 import ia.example.shoppinglist.rest.dto.OrderDto;
-import ia.example.shoppinglist.rest.service.BasicService;
+import ia.example.shoppinglist.rest.service.implementations.OrderServiceImpl;
 
 @org.springframework.web.bind.annotation.RestController("order")
 public class OrderController extends RestController<OrderDto> {
 
-    private BasicService basicService;
+    private final OrderServiceImpl orderService;
 
-    public OrderController(BasicService basicService) {
-        super(basicService);
+    public OrderController(OrderServiceImpl orderService) {
+        super(orderService);
+        this.orderService = orderService;
     }
 
     /**
@@ -50,6 +55,7 @@ public class OrderController extends RestController<OrderDto> {
 
     /**
      * Получить актуальный список для пользователя
+     *
      * @param userId
      * @return
      */
@@ -61,8 +67,26 @@ public class OrderController extends RestController<OrderDto> {
     /**
      * Создать список на основе существующего у пользователя
      */
-    public void createOrderBasedOrder(String idOrder, String userId){
+    public void createOrderBasedOrder(OrderDto order, String userId) {
 
     }
 
+    /**
+     * Создать задачу для планирования покупки на основе списка
+     */
+    public void createPlannedTaskBasedOrder(OrderDto order, String userId) {
+
+    }
+
+    /**
+     * Получить список всех шаблонов для пользоваля
+     */
+
+    /**
+     * Внести информацию о покупку
+     */
+    @PutMapping(value = "")
+    public void updateOrderWithProduct(String userId, String orderId, @PathVariable EntryOrderDto[] entryOrderDtos) {
+
+    }
 }

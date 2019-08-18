@@ -2,7 +2,6 @@ package ia.example.shoppinglist.rest.service;
 
 import java.util.Objects;
 
-import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,8 +11,12 @@ import ia.example.shoppinglist.rest.dto.EntityDto;
 
 @Component
 public class UniversalMapper {
+    private final ModelMapper mapper;
+
     @Autowired
-    private ModelMapper mapper;
+    public UniversalMapper(ModelMapper mapper) {
+        this.mapper = mapper;
+    }
 
     public <T extends Entity> Entity toEntity(EntityDto dto, Class<T> entityClass) {
         return Objects.isNull(dto) ? null : mapper.map(dto, entityClass);

@@ -30,8 +30,8 @@ public abstract class RestController<T extends EntityDto> {
 
     @RequestMapping
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    List<T> listAll() {
+    @ResponseBody
+    public List<T> listAll() {
         Iterable<T> all = this.basicService.findAll();
         List<T> entities = new ArrayList<>();
         all.forEach(entities::add);
@@ -40,8 +40,8 @@ public abstract class RestController<T extends EntityDto> {
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    void create(@RequestBody T object) {
+    @ResponseBody
+    public void create(@RequestBody T object) {
         log.debug("Сreate() with body {} of type {}", object, object.getClass());
         basicService.save(object);
     }
@@ -55,8 +55,8 @@ public abstract class RestController<T extends EntityDto> {
 
     @PostMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    void update(@PathVariable String id, @RequestBody T object) {
+    @ResponseBody
+    public void update(@PathVariable String id, @RequestBody T object) {
         log.debug("update() of id#{} with body {}", id, object);
         log.debug("T json is of type {}", object.getClass());
         EntityDto updated = basicService.update(id, object);
@@ -66,8 +66,8 @@ public abstract class RestController<T extends EntityDto> {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    void delete(@PathVariable String id) {
+    @ResponseBody
+    public void delete(@PathVariable String id) {
         basicService.delete(id);
 
     }
