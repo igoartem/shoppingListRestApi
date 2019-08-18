@@ -1,13 +1,12 @@
 package ia.example.shoppinglist.rest.controller;
 
-import ia.example.shoppinglist.domain.User;
-import ia.example.shoppinglist.repositories.UserRepository;
+import ia.example.shoppinglist.rest.dto.UserDto;
+import ia.example.shoppinglist.rest.service.BasicService;
 
-@org.springframework.web.bind.annotation.RestController
-public class UserController extends RestController<User> {
+@org.springframework.web.bind.annotation.RestController("user")
+public class UserController extends RestController<UserDto> {
 
-    public UserController(UserRepository userRepository) {
-
-        super(userRepository);
+    public UserController(BasicService basicService) {
+        super(basicService);
     }
 }

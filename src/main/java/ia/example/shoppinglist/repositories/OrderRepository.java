@@ -3,8 +3,8 @@ package ia.example.shoppinglist.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import ia.example.shoppinglist.domain.User;
+import ia.example.shoppinglist.domain.Order;
 
-@Repository("userRepository")
-public interface UserRepository extends CrudRepository<User, String> {
+@Repository("orderRepository")
+public interface OrderRepository extends CrudRepository<Order, String> {
 }

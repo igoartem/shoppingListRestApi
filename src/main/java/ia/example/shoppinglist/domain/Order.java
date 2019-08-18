@@ -1,18 +1,15 @@
 package ia.example.shoppinglist.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class Order extends Entity {
-
-    private String id;
-    private Product product;
-    private Integer price;
-    private String description;
-    private StateOrder stateOrder = StateOrder.NEW;
-
-    public enum StateOrder {
-        NEW, DONE, CANCEL
-    }
-
+    private String name;
+    private LocalDateTime reminderDate;
+    private LocalDateTime createDate;
+    private List<EntryOrder> entryOrders;
+    private User user;
 }

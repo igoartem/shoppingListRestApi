@@ -2,8 +2,10 @@ package ia.example.shoppinglist.domain;
 
 import java.io.Serializable;
 
-public abstract class Entity implements Serializable {
-    public abstract String getId();
+import lombok.Data;
 
-    public abstract void setId(String id);
+@Data
+public abstract class Entity implements Serializable {
+
+    private String id;
 }

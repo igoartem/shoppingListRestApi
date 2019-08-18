@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class Product extends Entity {
-
-    private String id;
     private String name;
     private String description;
     private String price;
