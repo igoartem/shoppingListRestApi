@@ -2,11 +2,7 @@ package ia.example.shoppinglist.rest.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import ia.example.shoppinglist.rest.dto.EntryOrderDto;
 import ia.example.shoppinglist.rest.dto.OrderDto;
@@ -27,8 +23,9 @@ public class OrderController extends RestController<OrderDto> {
      *
      * @return
      */
-    public List<OrderDto> findListByUserId() {
-        return null;
+    @GetMapping(value = "user/{userId}")
+    public List<OrderDto> findOrderListByUserId(@RequestParam String userId) {
+        return orderService.findOrderListByUserId(userId);
     }
 
     /**
@@ -36,20 +33,24 @@ public class OrderController extends RestController<OrderDto> {
      *
      * @return
      */
-    public OrderDto findOrderByUserId() {
+    public OrderDto findOrderByUserId(String userId, String orderId) {
         return null;
     }
 
-    public void createOrder() {
-
-    }
 
     /**
-     * Сдеалать список актуальным. У всех остальных списков статус становится не актуальным.
+     * создать и  Сдеалать список актуальным. У всех остальных списков статус становится не актуальным.
      *
      * @param order
      */
     public void makeOrderActual(@RequestBody OrderDto order) {
+    }
+
+    /**
+     * Сделать список актуальным
+     * @param orderId
+     */
+    public void useActualOrder(String orderId){
 
     }
 
@@ -59,14 +60,17 @@ public class OrderController extends RestController<OrderDto> {
      * @param userId
      * @return
      */
-    @GetMapping(value = "a/{id}")
-    public OrderDto getActualOrderByUserId(String userId) {
+    @GetMapping(value = "order/user/{id}")
+    public OrderDto getActualOrderByUserId(@RequestParam String userId) {
+
+
         return null;
     }
 
     /**
      * Создать список на основе существующего у пользователя
      */
+    @PutMapping(value = "")
     public void createOrderBasedOrder(OrderDto order, String userId) {
 
     }

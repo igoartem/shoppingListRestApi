@@ -3,6 +3,7 @@ package ia.example.shoppinglist.rest.service.implementations;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -16,9 +17,11 @@ import ia.example.shoppinglist.rest.service.UniversalMapper;
 public abstract class AbstractServiceImpl implements BasicService {
     private static final Logger log = LoggerFactory.getLogger(AbstractServiceImpl.class);
     private final CrudRepository<Entity, String> crudRepository;
-    private final UniversalMapper universalMapper;
-    private final Class<? extends Entity> entityClass;
-    private final Class<? extends EntityDto> entityDtoClass;
+    protected final UniversalMapper universalMapper;
+    @Getter
+    protected final Class<? extends Entity> entityClass;
+    @Getter
+    protected final Class<? extends EntityDto> entityDtoClass;
 
     public AbstractServiceImpl(CrudRepository<Entity, String> crudRepository, UniversalMapper universalMapper, Class<? extends Entity> entityClass,
             Class<? extends EntityDto> entityDtoClass) {
