@@ -28,7 +28,7 @@ public abstract class RestController<T extends EntityDto> {
         this.basicService = basicService;
     }
 
-    @RequestMapping
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<T> listAll() {
