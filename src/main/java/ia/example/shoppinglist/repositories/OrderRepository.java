@@ -12,4 +12,7 @@ import java.util.List;
 public interface OrderRepository extends CrudRepository<Order, String> {
     @Query("{order.client.id: ?0}")
     List<Order> findOrderByUserId(String userId);
+
+    @Query("{$and {order.client.id: ?0}, {order.actual: true}}")
+    List<Order> findActulaOrderByUserId(String userId);
 }
