@@ -16,6 +16,7 @@ public class OrderDto extends EntityDto {
     private String name;
     private LocalDateTime reminderDate;
     private LocalDateTime createDate;
-    private List<EntryOrder> entryOrders;
-    private User user;
+    private String userId;
+    private Boolean actual;
+    private List<EntryOrderDto> entryOrders;
 }
