@@ -1,5 +1,6 @@
 package ia.example.shoppinglist.rest.controller;
 
+import ia.example.shoppinglist.exeption.EntityNotFoundException;
 import ia.example.shoppinglist.rest.dto.EntryOrderDto;
 import ia.example.shoppinglist.rest.dto.OrderDto;
 import ia.example.shoppinglist.rest.service.implementations.OrderServiceImpl;
@@ -54,7 +55,7 @@ public class OrderController extends RestController<OrderDto> {
     @PutMapping(value = "update")
     public void useActualOrder(@RequestBody OrderDto orderDto,
                                @RequestParam(value = "userId") String userId,
-                               @RequestParam(value = "activate", required = false) Boolean activate) throws BindException {
+                               @RequestParam(value = "activate", required = false) Boolean activate) throws BindException, EntityNotFoundException {
         orderService.updateOrderDto(orderDto, userId, activate);
     }
 
