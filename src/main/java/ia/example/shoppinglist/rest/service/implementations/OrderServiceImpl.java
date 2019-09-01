@@ -1,6 +1,7 @@
 package ia.example.shoppinglist.rest.service.implementations;
 
 import ia.example.shoppinglist.domain.Entity;
+import ia.example.shoppinglist.domain.EntryOrder;
 import ia.example.shoppinglist.domain.Order;
 import ia.example.shoppinglist.domain.User;
 import ia.example.shoppinglist.exeption.EntityNotFoundException;
@@ -10,15 +11,11 @@ import ia.example.shoppinglist.rest.dto.EntryOrderDto;
 import ia.example.shoppinglist.rest.dto.OrderDto;
 import ia.example.shoppinglist.rest.service.OrderService;
 import ia.example.shoppinglist.rest.service.UniversalMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import javax.naming.OperationNotSupportedException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -55,7 +52,7 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
         order.setCreateDate(LocalDateTime.now());
         User user = userRepository.findOne(userId);
         if (ObjectUtils.isEmpty(user)) {
-            throw new BindException(new Object(), "QQQ");
+            throw new BindException(new Object(), "User not found");
         }
         order.setUserId(user.getId());
         orderRepository.save(order);
@@ -70,20 +67,45 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
         if (ObjectUtils.isEmpty(oldOrder)) {
             throw new EntityNotFoundException(Order.class, null, oldOrder.getId());
         }
+        User user = userRepository.findOne(userId);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new IllegalArgumentException("Object user is null");
+        }
+        //Проверим что у задачи тот же пользователь
+        if (!oldOrder.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Object user uncorrected");
+        }
         Order newOrder = (Order) universalMapper.toEntity(orderDto, Order.class);
         newOrder.setActual(!ObjectUtils.isEmpty(activate) ? activate : false);
-        //        Проверка что пользователь существвет?
-        //       User user = userRepository.findOne(userId);
-        //Проверим что у задачи тот же пользователь
         newOrder.setUserId(userId);
         orderRepository.save(newOrder);
-
     }
 
-    //обновляем только существющие объекты?
-    public void updateEntryOrder(String userId, String orderId, EntryOrderDto[] entryOrderDtos) {
-        //получим спикок и обновим его
+    public void createEntryOrder(String userId, String orderId, EntryOrderDto entryOrderDto) {
+        updateEntryOrder(true, userId, orderId, entryOrderDto);
+    }
 
+
+    public void updateEntryOrder(String userId, String orderId, EntryOrderDto entryOrderDto) {
+        updateEntryOrder(false, userId, orderId, entryOrderDto);
+    }
+
+    private void updateEntryOrder(Boolean create, String userId, String orderId, EntryOrderDto entryOrderDto) {
+        //получим спикок и обновим его
+        Order order = orderRepository.findOne(orderId);
+        if (ObjectUtils.isEmpty(order)) {
+            throw new IllegalArgumentException("Object order is null");
+        }
+        User user = userRepository.findOne(userId);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new IllegalArgumentException("Object user is null");
+        }
+        EntryOrder entryOrder = (EntryOrder) universalMapper.toEntity(entryOrderDto, EntryOrder.class);
+        if (!create) {
+            order.getEntryOrders().removeIf(entry -> entry.equals(entryOrder.getId()));
+        }
+        order.getEntryOrders().add(entryOrder);
+        orderRepository.save(order);
     }
 
     @Override

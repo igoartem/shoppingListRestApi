@@ -1,8 +1,10 @@
 package ia.example.shoppinglist.domain;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document(collection = "entry_orders")
 public class EntryOrder extends Entity {
 
     private Product product;

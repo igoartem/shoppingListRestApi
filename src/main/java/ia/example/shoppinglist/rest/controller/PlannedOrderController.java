@@ -1,9 +1,11 @@
 package ia.example.shoppinglist.rest.controller;
 
-import ia.example.shoppinglist.rest.dto.OrderDto;
+import ia.example.shoppinglist.rest.dto.PlannedOrderDto;
 import ia.example.shoppinglist.rest.service.implementations.PlannedOrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = "/plannedorder")
@@ -18,14 +20,34 @@ public class PlannedOrderController extends RestController {
     }
 
     /**
-     * Создать задачу для планирования покупки на основе списка
+     * Получить список всех шаблонов для пользоваля
+     *
+     * @param userId
+     * @return
      */
-    public void createPlannedTaskBasedOrder(OrderDto order, String userId) {
-
+    @GetMapping(value = "user")
+    @ResponseBody
+    public List<PlannedOrderDto> findOPlannedOrdersByUserId(@RequestParam(value = "userId") String userId) {
+        return plannedOrderService.findOPlannedOrdersByUserId(userId);
     }
 
     /**
-     * Получить список всех шаблонов для пользоваля
+     * Создать шаблон для пользоватедя
      */
+    @PostMapping(value = "create")
+    public void createOrder(@RequestBody PlannedOrderDto plannedOrderDto,
+                            @RequestParam(value = "userId") String userId) {
+        plannedOrderService.createPlannedOrder(plannedOrderDto, userId);
+    }
 
+    /**
+     * Заплонировать список покупок на основе существующего
+     * Приедщий список игнорируется
+     */
+    @PostMapping(value = "createbyorder")
+    public void createOrderByOrder(@RequestBody PlannedOrderDto plannedOrderDto,
+                                   @RequestParam(value = "userId") String userId,
+                                   @RequestParam(value = "orderId") String orderId) {
+        plannedOrderService.createPlannedOrderByOrder(plannedOrderDto, userId, orderId);
+    }
 }

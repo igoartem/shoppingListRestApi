@@ -30,7 +30,7 @@ public class OrderController extends RestController<OrderDto> {
      * @param name     - фильтр по названию списка
      * @return
      */
-    @GetMapping()
+    @GetMapping(value = "user")
     @ResponseBody
     public List<OrderDto> findOrdersByUserId(@RequestParam(value = "userId") String userId,
                                              @RequestParam(value = "activate", required = false) Boolean activate,
@@ -45,8 +45,8 @@ public class OrderController extends RestController<OrderDto> {
     @PostMapping(value = "create")
     public void createOrder(@RequestBody OrderDto orderDto,
                             @RequestParam(value = "activate", required = false) Boolean activate,
-                            @RequestParam(value = "orderId", required = false) String orderId) throws BindException {
-        orderService.createOrder(orderDto, activate, orderId);
+                            @RequestParam(value = "userId") String userId) throws BindException {
+        orderService.createOrder(orderDto, activate, userId);
     }
 
     /**
@@ -59,14 +59,23 @@ public class OrderController extends RestController<OrderDto> {
         orderService.updateOrderDto(orderDto, userId, activate);
     }
 
+    /**
+     * Добавить в список запись
+     */
+    @PostMapping(value = "entry/create")
+    public void createEntryOrder(@RequestParam(value = "userId") String userId,
+                                 @RequestParam(value = "orderId") String orderId,
+                                 @RequestParam(value = "entryOrder") EntryOrderDto entryOrderDto) {
+        orderService.createEntryOrder(userId, orderId, entryOrderDto);
+    }
 
     /**
-     * Внести информацию о покупке
+     * Обновить информацию о записях в списке
      */
-    @PutMapping(value = "")
-    public void updateOrderWithProduct(@RequestParam(value = "userId") String userId,
-                                       @RequestParam("orderId") String orderId,
-                                       @PathVariable EntryOrderDto[] entryOrderDtos) {
-        orderService.updateEntryOrder(userId, orderId, entryOrderDtos);
+    @PutMapping(value = "entry/update")
+    public void updateEntryOrder(@RequestParam(value = "userId") String userId,
+                                 @RequestParam(value = "orderId") String orderId,
+                                 @RequestParam(value = "entryOrder") EntryOrderDto entryOrderDto) {
+        orderService.updateEntryOrder(userId, orderId, entryOrderDto);
     }
 }
