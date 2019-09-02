@@ -1,5 +1,13 @@
 package ia.example.shoppinglist.rest.service.implementations;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
 import ia.example.shoppinglist.domain.Entity;
 import ia.example.shoppinglist.domain.Order;
 import ia.example.shoppinglist.domain.PlannedOrder;
@@ -9,13 +17,6 @@ import ia.example.shoppinglist.repositories.PlannedOrderRepository;
 import ia.example.shoppinglist.repositories.UserRepository;
 import ia.example.shoppinglist.rest.dto.PlannedOrderDto;
 import ia.example.shoppinglist.rest.service.UniversalMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class PlannedOrderServiceImpl extends AbstractServiceImpl {
@@ -25,7 +26,8 @@ public class PlannedOrderServiceImpl extends AbstractServiceImpl {
     private final OrderRepository orderRepository;
 
     @Autowired
-    public PlannedOrderServiceImpl(UniversalMapper universalMapper, PlannedOrderRepository plannedOrderRepository, UserRepository userRepository, OrderRepository orderRepository) {
+    public PlannedOrderServiceImpl(UniversalMapper universalMapper, PlannedOrderRepository plannedOrderRepository, UserRepository userRepository,
+            OrderRepository orderRepository) {
         super(universalMapper, PlannedOrder.class, PlannedOrderDto.class);
         this.plannedOrderRepository = plannedOrderRepository;
         this.userRepository = userRepository;
@@ -39,10 +41,8 @@ public class PlannedOrderServiceImpl extends AbstractServiceImpl {
 
     public List<PlannedOrderDto> findOPlannedOrdersByUserId(String userId) {
         List<PlannedOrder> plannedOrders = plannedOrderRepository.findPlannedOrderByUserId(userId);
-        List<PlannedOrderDto> plannedOrderDtos= Collections.emptyList();
-        plannedOrders.stream().forEach(order -> {
-            plannedOrderDtos.add((PlannedOrderDto) super.universalMapper.toDto(order, PlannedOrderDto.class));
-        });
+        List<PlannedOrderDto> plannedOrderDtos = new ArrayList<>();
+        plannedOrders.forEach(order -> plannedOrderDtos.add((PlannedOrderDto) super.universalMapper.toDto(order, PlannedOrderDto.class)));
         return plannedOrderDtos;
     }
 
@@ -50,7 +50,7 @@ public class PlannedOrderServiceImpl extends AbstractServiceImpl {
         if (ObjectUtils.isEmpty(orderDto)) {
             throw new IllegalArgumentException("Object order is null");
         }
-        PlannedOrder plannedOrder = (PlannedOrder) universalMapper.toEntity(orderDto, Order.class);
+        PlannedOrder plannedOrder = (PlannedOrder) universalMapper.toEntity(orderDto, PlannedOrder.class);
         User user = userRepository.findOne(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new IllegalArgumentException("Object user is null");
@@ -60,11 +60,11 @@ public class PlannedOrderServiceImpl extends AbstractServiceImpl {
 
     }
 
-    public void createPlannedOrderByOrder(PlannedOrderDto orderDto, String userId, String orderId){
+    public void createPlannedOrderByOrder(PlannedOrderDto orderDto, String userId, String orderId) {
         if (ObjectUtils.isEmpty(orderDto)) {
             throw new IllegalArgumentException("Object order is null");
         }
-        PlannedOrder plannedOrder = (PlannedOrder) universalMapper.toEntity(orderDto, Order.class);
+        PlannedOrder plannedOrder = (PlannedOrder) universalMapper.toEntity(orderDto, PlannedOrder.class);
         User user = userRepository.findOne(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new IllegalArgumentException("Object user is null");

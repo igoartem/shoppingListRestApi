@@ -1,10 +1,14 @@
 package ia.example.shoppinglist.domain;
 
+import java.util.UUID;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "entry_orders")
+@EqualsAndHashCode(callSuper = true)
 public class EntryOrder extends Entity {
 
     private Product product;
@@ -16,4 +20,8 @@ public class EntryOrder extends Entity {
         NEW, DONE, CANCEL
     }
 
+    public EntryOrder() {
+        super();
+        this.setId(UUID.randomUUID().toString());
+    }
 }

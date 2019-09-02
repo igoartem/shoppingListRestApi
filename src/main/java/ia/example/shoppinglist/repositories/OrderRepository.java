@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository("orderRepository")
 public interface OrderRepository extends CrudRepository<Order, String> {
-    @Query("{ 'userId' : ?0} $and  {'actual' : ?1}")
-    List<Order> findOrderByUserId(String userId, Boolean actual);
 
+    @Query("{ 'userId':?0, 'actual':?1 }")
+    List<Order> findOrderByUserId(String userId, Boolean actual);
 
 }

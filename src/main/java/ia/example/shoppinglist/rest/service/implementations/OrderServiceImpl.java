@@ -11,18 +11,25 @@ import ia.example.shoppinglist.rest.dto.EntryOrderDto;
 import ia.example.shoppinglist.rest.dto.OrderDto;
 import ia.example.shoppinglist.rest.service.OrderService;
 import ia.example.shoppinglist.rest.service.UniversalMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl extends AbstractServiceImpl implements OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -36,10 +43,8 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
 
     public List<OrderDto> findOrdersByUserId(String userId, Boolean activate, String name) {
         List<Order> orders = orderRepository.findOrderByUserId(userId, activate);
-        List<OrderDto> orderDtos = Collections.emptyList();
-        orders.stream().forEach(order -> {
-            orderDtos.add((OrderDto) super.universalMapper.toDto(order, OrderDto.class));
-        });
+        List<OrderDto> orderDtos = new ArrayList<>();
+        orders.forEach(order -> orderDtos.add((OrderDto) universalMapper.toDto(order, OrderDto.class)));
         return orderDtos;
     }
 
@@ -85,12 +90,12 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
         updateEntryOrder(true, userId, orderId, entryOrderDto);
     }
 
-
     public void updateEntryOrder(String userId, String orderId, EntryOrderDto entryOrderDto) {
         updateEntryOrder(false, userId, orderId, entryOrderDto);
     }
 
     private void updateEntryOrder(Boolean create, String userId, String orderId, EntryOrderDto entryOrderDto) {
+        log.debug("Run updateEntryOrder with create: {}", create);
         //получим спикок и обновим его
         Order order = orderRepository.findOne(orderId);
         if (ObjectUtils.isEmpty(order)) {
@@ -102,7 +107,16 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
         }
         EntryOrder entryOrder = (EntryOrder) universalMapper.toEntity(entryOrderDto, EntryOrder.class);
         if (!create) {
-            order.getEntryOrders().removeIf(entry -> entry.equals(entryOrder.getId()));
+            if (StringUtils.isEmpty(entryOrderDto.getId())) {
+                throw new IllegalArgumentException("EntryOrderId is null");
+            }
+            Optional<EntryOrder> optionalEntryOrder = order.getEntryOrders().stream().
+                    filter(p -> p.getId().equals(entryOrder.getId())).
+                    findFirst();
+            if (!optionalEntryOrder.isPresent()) {
+                throw new IllegalArgumentException("Entry order not found");
+            }
+            order.getEntryOrders().remove(optionalEntryOrder.get());
         }
         order.getEntryOrders().add(entryOrder);
         orderRepository.save(order);
