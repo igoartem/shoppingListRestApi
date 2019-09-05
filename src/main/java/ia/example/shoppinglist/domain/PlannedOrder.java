@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Document(collection = "planned_orders")
 public class PlannedOrder extends Entity{
-    private String planCron;
+    private String planCron; // Подразумевается создание списка по крон выражению
     private LocalDateTime planDate;
     private Order order;
     private String userId;

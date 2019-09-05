@@ -12,4 +12,7 @@ public interface PlannedOrderRepository extends CrudRepository<PlannedOrder, Str
     @Query("{'userId' : ?0}")
     List<PlannedOrder> findPlannedOrderByUserId(String userId);
 
+    @Query("{'planDate':{$exists:true}}")
+    List<PlannedOrder> findPlannedOrdersByPlanCronIsNotNull();
+
 }
